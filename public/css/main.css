@@ -1,0 +1,110 @@
+html {
+  font-size: 1em;
+}
+body {
+  background: #555;
+  color: #f1f1f1;
+  line-height: 1.4;
+}
+.header-container, .main-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+header.header h1.title {
+  font-size: 2.5rem;
+  margin: 0 1em 0 0;
+  display: inline;
+}
+header.header ul {
+  display: inline-block;
+  margin: 0;
+}
+header.header li {
+display: inline-block;
+}
+
+/* Home */
+.grid-item {
+  width: 100%;
+  padding: 5px;
+  box-sizing: border-box;
+}
+@media screen and (min-width: 500px) {
+.grid-item { width: 50%; }
+}
+@media screen and (min-width: 900px) {
+.grid-item { width: 33.3%; }
+}
+@media screen and (min-width: 1200px) {
+.grid-item { width: 25%; }
+}
+.grid-item img {
+  margin: 0 auto;
+  display: block;
+  max-width: 100%;
+  cursor: pointer;
+}
+.pagination__next {
+  display: none;
+}
+.page-load-status {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+  font-size: 1em;
+  background: rgba(255,255,255,0.05);
+}
+.page-load-status p {
+  margin: 0;
+  padding: 10px 0;
+  text-shadow: rgba(0,0,0,0.5) 0 0 4px;
+}
+
+/* Votation */
+.votation {
+width: 90%;
+max-width: 400px;
+margin: 0 auto;
+  text-align: center;
+  transition: opacity .25s ease-in;
+}
+.votation .card {
+width: 100%;
+}
+.votation .votebtn {
+width: 54px;
+padding: 10px;
+cursor: pointer;
+}
+
+/* Submit */
+.guidelines {
+  font-size: 0.75em;
+  max-width: 600px;
+  margin: 0 auto;
+}
+#uploadimages {
+  text-align: center;
+}
+#uploadimages input {
+  width: 90%;
+  max-width: 600px;
+  line-height: 0;
+}
+#uploadimages input[type=text] {
+  color: #333;
+}
+#uploadimages input[type=submit] {
+  max-width: 200px;
+  color: #f1f1f1;
+}
+
+/* About */
+#twitter-widget-0 {
+margin: 0 auto;
+display: block!important;
+}

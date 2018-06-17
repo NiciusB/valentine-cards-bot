@@ -1,0 +1,8 @@
+<% include header.ejs %>
+
+<br><div style='text-align:center'>
+<% categories.forEach(function(cat) { %>
+  <p><a href="/?cat=<%=cat.name%>"><%=cat.name%> (<%=cat.count%> cards)</a></p>
+<% })  %>
+</div>
+<% include footer.ejs %>

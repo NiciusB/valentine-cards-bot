@@ -1,0 +1,48 @@
+<% include header.ejs %>
+  <div class='grid'>
+    <% cards.forEach(function(card){ %>
+        <div class='grid-item'><img src='https://balbona.me/valentine/uploads/<%= `${card.id}.${card.format}` %>' class='card' onclick='send(<%=card.id%>)'/></div>
+    <% }); %>
+  </div>
+  <% if(cards.length > 0) { %>
+      <a class='pagination__next' href='?page=<%=page + 1%>&cat=<%=cat%>'></a>
+  <% } %>
+    <div class="page-load-status">
+      <p class="infinite-scroll-request">Loading...</p>
+    </div>
+    <script>
+    var $grid = $('.grid').masonry({
+      itemSelector: '.grid-item',
+      percentPosition: true
+    });
+    var msnry = $grid.data('masonry');
+    $grid.infiniteScroll({
+      outlayer  : msnry,
+      path: '.pagination__next',
+      status: '.page-load-status',
+      append: '.grid-item',
+      history: false,
+    });
+    $grid.imagesLoaded().progress( function() {
+      $grid.masonry('layout');
+    });
+    var savedusername='BarackObama';
+    function validTwitteUser(sn) {
+        return /^[a-zA-Z0-9_]{1,15}$/.test(sn);
+    }
+    function send(id) {
+    	var person=prompt("Username (@) of the reciever",savedusername);
+    	if(person!=null) {
+    	    if (!validTwitteUser(person)) {
+    	        alert('That doesn\'t look like a twitter username');
+    	        return false;
+    	    }
+    		savedusername=person;
+    		var xmlhttp = new XMLHttpRequest();
+    		xmlhttp.open("GET", "/send?card="+id+"&username="+person, true);
+    		xmlhttp.send();
+    		alert('Card sent! (It may take a while to be actually sent by the bot)');
+    	}
+    }
+    </script>
+<% include footer.ejs %>
