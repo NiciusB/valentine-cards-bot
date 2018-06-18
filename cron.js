@@ -12,7 +12,6 @@ try {
 
 module.exports = () => {
   setInterval(processQueue, 1000 * 60 * 15)
-  processQueue() // DEV DEBUG
   setInterval(checkNonPublishedCards, 1000 * 60)
 }
 
