@@ -10,6 +10,7 @@ db.on('error', console.error.bind(console, 'connection error:'));
 db.once('open', function() {
   const port = process.env.port || 3000
   app.listen(port, () => console.log(`Valentine Cards Bot listening on http://localhost:${port}`))
+  require('./cron')()
 })
 
 app.set('view engine', 'ejs')
