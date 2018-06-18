@@ -1,4 +1,9 @@
 const express = require('express')
+const fs  = require('fs')
+const multer  = require('multer')
+const upload = multer({
+  storage: multer.memoryStorage()
+})
 const Card = require('../models/Card')
 const Queue = require('../models/Queue')
 const Stat = require('../models/Stat')
@@ -37,6 +42,50 @@ router.get('/about', async function (req, res) {
   res.render('about', { tab: 'about' })
 })
 
+var cpUpload = upload.single('vCard')
+router.all('/upload', cpUpload, async function (req, res) {
+  const renderData = { tab: 'upload' }
+  if (req.file) {
+    renderData.uploaded = false
+    const tags = req.body.tags ? req.body.tags.split(',').map(tag => tag.trim()) : []
+    const newCardID = (await Card.findOne().sort({id: -1}).exec()).id + 1
+    const format = req.file.mimetype.split('/')[1]
+
+    if (['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].indexOf(req.file.mimetype) === -1) {
+      renderData.error = 'Image type not recognised'
+      res.render('upload', renderData)
+      return
+    }
+
+    if (req.file.size > 1024 * 1024 * 7) {
+      renderData.error = 'Sorry, your file is too large'
+      res.render('upload', renderData)
+      return
+    }
+
+    fs.exists('uploads', function(exists) {
+      if (!exists) fs.mkdirSync('uploads');
+
+      fs.writeFile(`uploads/${newCardID}.${format}`, req.file.buffer, function(){
+        new Card({
+          id: newCardID,
+          format,
+          categories: tags,
+          votes: [{
+            accepted: true,
+            ip: req.userIP
+          }]
+        }).save(function() {
+          renderData.uploaded = true
+          res.render('upload', renderData)
+        })
+      })
+    })
+  } else {
+    res.render('upload', renderData)
+  }
+})
+
 router.get('/categories', async function (req, res) {
   var cards = await Card.find({published: true}).exec()
   cards = cards.map(card => card.categories).filter(categories => categories.length > 0).reduce((a, b) => a.concat(b), [])
@@ -51,8 +100,7 @@ router.get('/categories', async function (req, res) {
 })
 
 router.get('/vote', async function (req, res) {
-  const userip = req.headers['cf-connecting-ip'] || req.connection.remoteAddress
-  cards = await Card.find({published: false, votes: {$not: {$elemMatch: {ip: userip}}}}).sort({timestamp: -1}).limit(200).exec()
+  cards = await Card.find({published: false, votes: {$not: {$elemMatch: {ip: req.userIP}}}}).sort({timestamp: -1}).limit(200).exec()
   res.render('vote', { tab: 'vote', cards })
 })
 

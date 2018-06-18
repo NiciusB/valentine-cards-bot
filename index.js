@@ -16,6 +16,12 @@ app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
 app.use('/', express.static('public'))
+app.use('/uploads', express.static('uploads'))
+
+app.use(function(req, res, next){
+  req.userIP = req.headers['cf-connecting-ip'] || req.connection.remoteAddress
+  next()
+})
 
 app.use('/', require('./controllers'))
 

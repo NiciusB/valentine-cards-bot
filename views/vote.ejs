@@ -2,7 +2,7 @@
 
 <% cards.forEach(function(card) { %>
   <div id="card-id-<%=card.id%>" class="votation">
-  <img class="card" src="https://balbona.me/valentine/uploads/<%=card.id%>.<%=card.format%>" />
+  <img class="card" src="/uploads/<%=card.id%>.<%=card.format%>" />
   <img class="votebtn" src="/yes.png" onclick="javascript:vote(<%=card.id%>, 'y')"/>
   <img class="votebtn" src="/no.png" onclick="javascript:vote(<%=card.id%>, 'n')"/>
   </div>

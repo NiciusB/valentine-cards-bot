@@ -4,7 +4,10 @@ var schema = mongoose.Schema({
   id: Number,
   format: String,
   timestamp: { type: Number, default: () => Math.floor(Date.now()/1000) },
-  published: Boolean,
+  published: {
+    type: Boolean,
+    default: false
+  },
   categories: [String],
   votes: [{
     accepted: Boolean,

@@ -1,0 +1,26 @@
+<% include header.ejs %>
+<%
+if (typeof uploaded != 'undefined' && uploaded) {
+  %> The card has been uploaded and now is being moderated! <%
+}
+if (typeof error != 'undefined') {
+  %> <%=error%> <%
+}
+%>
+<br />
+<div class="guidelines">
+  <h5>Guidelines</h5>
+  <ul>
+      <li>No NSFW</li>
+      <li>Must have "to:" and "from:" labels or similar</li>
+      <li>Try to put at least one tag</li>
+      <li>You can upload gifs, jpgs or pngs</li>
+  </ul>
+</div>
+<form id="uploadimages" action="/upload"  method="post" enctype="multipart/form-data" onsubmit="setTimeout(function(){$('#imgforms').attr('disabled','')}, 2)">
+Tags: <input type="text" class="form-control" name="tags" placeholder="Separate by commas (Ex: star wars, darth vader, daddy)" /><br/>
+Image: <input type="file" class="form-control" name="vCard" accept="image/*" /><br/>
+<br/>
+<input type="submit" value="Upload" class="form-control" />
+</form>
+<% include footer.ejs %>
