@@ -14,6 +14,7 @@ var schema = mongoose.Schema({
 });
 
 schema.index({'published': 1})
+schema.index({'id': 1})
 
 var model = mongoose.model('Card', schema);
 

@@ -50,4 +50,32 @@ router.get('/categories', async function (req, res) {
   res.render('categories', { tab: 'categories', categories })
 })
 
+router.get('/vote', async function (req, res) {
+  const userip = req.headers['cf-connecting-ip'] || req.connection.remoteAddress
+  cards = await Card.find({published: false, votes: {$not: {$elemMatch: {ip: userip}}}}).sort({timestamp: -1}).limit(200).exec()
+  res.render('vote', { tab: 'vote', cards })
+})
+
+router.get('/vote_action', async function (req, res) {
+  const cardID = parseInt(req.query.card)
+  const vote = req.query.vote == 'y'
+  const userip = req.headers['cf-connecting-ip'] || req.connection.remoteAddress
+
+  card = await Card.findOne({id: cardID, published: false}).limit(1).exec()
+  if (card) {
+    if (!card.votes.find(val => val.ip === userip)) {
+      res.json({success: true, message: 'Vote counted'})
+      card.votes.push({
+        accepted: vote,
+        ip: userip
+      })
+      card.save()
+    } else {
+      res.json({error: true, message: 'You have already voted'})
+    }
+  } else {
+    res.json({error: true, message: 'Card ID not valid'})
+  }
+})
+
 module.exports = router

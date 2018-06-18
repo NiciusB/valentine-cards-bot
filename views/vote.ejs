@@ -1,0 +1,23 @@
+<% include header.ejs %>
+
+<% cards.forEach(function(card) { %>
+  <div id="card-id-<%=card.id%>" class="votation">
+  <img class="card" src="https://balbona.me/valentine/uploads/<%=card.id%>.<%=card.format%>" />
+  <img class="votebtn" src="/yes.png" onclick="javascript:vote(<%=card.id%>, 'y')"/>
+  <img class="votebtn" src="/no.png" onclick="javascript:vote(<%=card.id%>, 'n')"/>
+  </div>
+<% })  %>
+<script>
+  function vote(n, v) {
+      var xmlhttp = new XMLHttpRequest();
+      xmlhttp.open("GET", "/vote_action?card="+n+"&vote="+v, true);
+      xmlhttp.send();
+      var el = document.querySelector('#card-id-'+n);
+      el.style.opacity = 0;
+      setTimeout(function() {
+        el.style.display = 'none';
+      }, 260);
+  }
+</script>
+
+<% include footer.ejs %>
