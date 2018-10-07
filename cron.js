@@ -65,8 +65,10 @@ async function sendTweet(T, message) {
     }
     T.post('statuses/update', params).then(res => {
       message.remove() // Remove from queue
+      // Log if something went wrong
       if (!res.data || !res.data.created_at) {
         console.error(data)
+      } else {
         // Remove tweet if there were no mentions
         if (!res.data.entities || !res.data.entities.user_mentions.length) {
           T.post('statuses/destroy/:id', { id: res.data.id_str })
