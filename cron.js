@@ -48,7 +48,7 @@ async function processQueue() {
 }
 
 async function sendTweet(T, message) {
-  const card = await Card.findOne({id: message.card}).exec()
+  const card = await Card.findOne({published: true, id: message.card}).exec()
 
   var b64content = fs.readFileSync(`uploads/${card.id}.${card.format}`, { encoding: 'base64' })
   // Upload image

@@ -26,22 +26,38 @@
     $grid.imagesLoaded().progress( function() {
       $grid.masonry('layout');
     });
-    var savedusername='BarackObama';
-    function validTwitteUser(sn) {
-        return /^[a-zA-Z0-9_]{1,15}$/.test(sn);
+    var possibleInitialUsernames = [
+      'Shakespeare',
+      'Socrates',
+      'NikolaTesla',
+      'YuriGagarin',
+      'WaltDisney',
+      'Oprah',
+      'Malala',
+      'Marie_Curie',
+      'Hypatia',
+      'AgathaChristie'
+    ];
+    var savedusername = possibleInitialUsernames[Math.floor(Math.random() * possibleInitialUsernames.length)];
+    function validTwitterUsername(sn) {
+      return /^[a-zA-Z0-9_]{1,15}$/.test(sn);
     }
     function send(id) {
-    	var person=prompt("Username (@) of the reciever",savedusername);
-    	if(person!=null) {
-    	    if (!validTwitteUser(person)) {
-    	        alert('That doesn\'t look like a twitter username');
-    	        return false;
-    	    }
-    		savedusername=person;
+      var person = prompt("Username (@) of the reciever", savedusername);
+      if (person[0] === '@') person = person.slice(1)
+      if (person != null) {
+        if (!validTwitterUsername(person)) {
+          alert('That doesn\'t look like a twitter username');
+          return false;
+        }
+    		savedusername = person;
     		var xmlhttp = new XMLHttpRequest();
     		xmlhttp.open("GET", "/send?card="+id+"&username="+person, true);
+        xmlhttp.addEventListener("load", function() {
+          var res = JSON.parse(this.responseText);
+          alert(res.message);
+        });
     		xmlhttp.send();
-    		alert('Card sent! (It may take a while to be actually sent by the bot)');
     	}
     }
     </script>

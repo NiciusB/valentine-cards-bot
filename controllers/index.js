@@ -4,6 +4,7 @@ const multer  = require('multer')
 const upload = multer({
   storage: multer.memoryStorage()
 })
+const imageHash = require('node-image-hash')
 const Card = require('../models/Card')
 const Queue = require('../models/Queue')
 const Stat = require('../models/Stat')
@@ -13,26 +14,30 @@ router.get('/', async function (req, res) {
   const page = req.query.page ? parseInt(req.query.page) : 0
   const cat = req.query.cat || ''
   const perPage = 50
-  const query = {published: true}
+
+  var query = {published: true}
   if (cat) query.categories = cat
+  if (req.query.id) query = {id: req.query.id} // Avoid requirement to be published
   cards = await Card.find(query).sort({timestamp: -1}).limit(perPage).skip(page * perPage).exec()
   res.render('index', { tab: 'index', cards, cat, page })
 })
 
 router.get('/send', async function (req, res) {
-  const card = parseInt(req.query.card)
+  const cardID = parseInt(req.query.card)
   const username = req.query.username
 
-  if (!card) return res.json({error: true, message: 'Card ID not valid'})
+  if (!cardID) return res.json({error: true, message: 'Card ID not valid'})
+  const card = await Card.findOne({published: true, id: cardID}).exec()
+  if (!card) return res.json({error: true, message: 'Card not found'})
   if (!username) return res.json({error: true, message: 'Username not valid'})
 
   new Queue({
-    card,
+    card: cardID,
     username
   }).save()
 
   new Stat({
-    card
+    card: cardID
   }).save()
 
   res.json({success: true, message: 'Card sent! (It may take a while to be actually sent by the bot)'})
@@ -45,45 +50,54 @@ router.get('/about', async function (req, res) {
 var cpUpload = upload.single('vCard')
 router.all('/upload', cpUpload, async function (req, res) {
   const renderData = { tab: 'upload' }
-  if (req.file) {
-    renderData.uploaded = false
-    const tags = req.body.tags ? req.body.tags.split(',').map(tag => tag.trim()) : []
-    const newCardID = (await Card.findOne().sort({id: -1}).exec()).id + 1
-    const format = req.file.mimetype.split('/')[1]
+  if (!req.file) {
+    res.render('upload', renderData)
+    return
+  }
 
-    if (['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].indexOf(req.file.mimetype) === -1) {
-      renderData.error = 'Image type not recognised'
-      res.render('upload', renderData)
-      return
-    }
+  renderData.uploaded = false
+  const tags = req.body.tags ? req.body.tags.split(',').map(tag => tag.trim()) : []
+  const newCardID = (await Card.findOne().sort({id: -1}).exec()).id + 1
+  const format = req.file.mimetype.split('/')[1]
 
-    if (req.file.size > 1024 * 1024 * 7) {
-      renderData.error = 'Sorry, your file is too large'
-      res.render('upload', renderData)
-      return
-    }
+  if (['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].indexOf(req.file.mimetype) === -1) {
+    renderData.error = 'Image type not recognised'
+    res.render('upload', renderData)
+    return
+  }
 
-    fs.exists('uploads', function(exists) {
-      if (!exists) fs.mkdirSync('uploads');
+  if (req.file.size > 1024 * 1024 * 7) {
+    renderData.error = 'Sorry, your file is too large'
+    res.render('upload', renderData)
+    return
+  }
 
-      fs.writeFile(`uploads/${newCardID}.${format}`, req.file.buffer, function(){
-        new Card({
-          id: newCardID,
-          format,
-          categories: tags,
-          votes: [{
-            accepted: true,
-            ip: req.userIP
-          }]
-        }).save(function() {
-          renderData.uploaded = true
-          res.render('upload', renderData)
-        })
+  const hash = await imageHash.hash(req.file.buffer, 256).then(res => {
+    return `${res.type}_${res.hash}`
+  })
+  const cardWithSameHash = await Card.findOne({ hash }).exec()
+  if (cardWithSameHash) {
+    renderData.error = `This card has already been uploaded (<a href="/?id=${cardWithSameHash.id}">View Card</a>)`
+    res.render('upload', renderData)
+    return
+  }
+
+  fs.exists('uploads', function(exists) {
+    if (!exists) fs.mkdirSync('uploads');
+
+    fs.writeFile(`uploads/${newCardID}.${format}`, req.file.buffer, function(){
+      new Card({
+        id: newCardID,
+        format,
+        hash,
+        categories: tags,
+        votes: []
+      }).save(function() {
+        renderData.uploaded = true
+        res.render('upload', renderData)
       })
     })
-  } else {
-    res.render('upload', renderData)
-  }
+  })
 })
 
 router.get('/categories', async function (req, res) {
