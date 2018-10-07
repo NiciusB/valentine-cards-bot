@@ -13,7 +13,7 @@
     <script src="https://unpkg.com/infinite-scroll@3/dist/infinite-scroll.pkgd.min.js"></script>
     <link rel="stylesheet" href="/css/normalize.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/skeleton/2.0.4/skeleton.min.css" />
-    <link rel="stylesheet" href="/css/main.css?2">
+    <link rel="stylesheet" href="/css/main.css?3">
     <script async src="https://www.googletagmanager.com/gtag/js?id=UA-67731642-4"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
@@ -25,9 +25,8 @@
   <body>
     <div class="header-container">
       <header class="header">
-        <a href="/"><h1 class="title">Valentine Cards Bot</h1></a>
+        <a href="/"><img class="logo-img" alt="Valentine Cards Bot Logo" src="/logo.png" /></a>
         <ul class="nav <%= typeof tab != 'undefined' ? tab : '' %>">
-          <li role="presentation"><a href="/">Send a card</a></li>
           <li role="presentation"><a href="/upload">Upload new card</a></li>
           <li role="presentation"><a href="/vote">Vote new cards</a></li>
           <li role="presentation"><a href="/categories">Categories</a></li>

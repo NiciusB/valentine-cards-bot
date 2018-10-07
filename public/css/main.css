@@ -6,21 +6,50 @@ body {
   color: #f1f1f1;
   line-height: 1.4;
 }
-.header-container, .main-container {
+.main-container {
   max-width: 1200px;
   margin: 0 auto;
 }
-header.header h1.title {
-  font-size: 2.5rem;
-  margin: 0 1em 0 0;
-  display: inline;
+
+/* Header */
+.header-container {
+  max-width: 1200px;
+  padding: 5px;
+  margin: 0 auto;
+}
+header.header {
+  padding: 5px;
+  overflow: auto;
+}
+header.header .logo-img {
+  width: 120px;
+  height: 120px;
+  float: left;
 }
 header.header ul {
-  display: inline-block;
+  display: block;
   margin: 0;
+  float: right;
 }
 header.header li {
-display: inline-block;
+  font-size: 0.85em;
+  line-height: 1.5;
+  display: block;
+  float: left;
+  margin: 0;
+  clear: left;
+}
+@media (min-width: 650px){
+  header.header li {
+    margin: 0 5px;
+    clear: none;
+    height: 120px;
+    line-height: 120px;
+  }
+}
+header.header li a {
+  color: #eee;
+  text-decoration: none;
 }
 
 /* Home */
@@ -82,10 +111,16 @@ cursor: pointer;
 }
 
 /* Submit */
+.error {
+  text-align: center;
+  color: #ff7d7d;
+  padding: 0 0.5em;
+}
 .guidelines {
   font-size: 0.75em;
   max-width: 600px;
   margin: 0 auto;
+  padding: 0 0.5em;
 }
 #uploadimages {
   text-align: center;
@@ -104,7 +139,15 @@ cursor: pointer;
 }
 
 /* About */
+.about-page {
+  text-align: center;
+}
+.about-page p {
+  margin: 0.15em 0;
+}
+.about-page a.twitter-timeline {
+  display: block;
+}
 #twitter-widget-0 {
-margin: 0 auto;
-display: block!important;
+  display: inline-block!important;
 }
