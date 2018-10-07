@@ -5,7 +5,8 @@ const mongoose = require('mongoose')
 const app = express()
 
 var mongooseConnectWithRetry = function() {
-  mongoose.connect('mongodb://localhost/valentinecards', {
+  mongoose.connect('mongodb://localhost:27017/valentinecards', {
+    useNewUrlParser: true,
     reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
     reconnectInterval: 500, // Reconnect every 500ms
   }, function(err) {
