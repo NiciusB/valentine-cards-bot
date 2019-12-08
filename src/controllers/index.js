@@ -9,6 +9,7 @@ const Card = require('../models/Card')
 const Queue = require('../models/Queue')
 const Stat = require('../models/Stat')
 const router = express.Router()
+const { generateRandomName } = require('./generateRandomName')
 
 router.get('/', async function (req, res) {
   const page = req.query.page ? parseInt(req.query.page) : 0
@@ -57,7 +58,8 @@ router.all('/upload', cpUpload, async function (req, res) {
 
   renderData.uploaded = false
   const tags = req.body.tags ? req.body.tags.split(',').map(tag => tag.trim()) : []
-  const newCardID = (await Card.findOne().sort({ id: -1 }).exec()).id + 1
+  const lastCardID = await Card.findOne().sort({ id: -1 }).exec()
+  const newCardID = !lastCardID ? 1 : lastCardID.id + 1
   const format = req.file.mimetype.split('/')[1]
 
   if (['image/jpg', 'image/jpeg', 'image/png', 'image/gif'].indexOf(req.file.mimetype) === -1) {
@@ -109,6 +111,11 @@ router.get('/categories', async function (req, res) {
     if (catIndex !== -1) categories[catIndex].count++
     else categories.push({ name: cat, count: 1 })
   })
+  if (process.env.NODE_ENV === 'development') {
+    for (let i = 0; i < 1000; i++) {
+      categories.push({ name: generateRandomName(), count: Math.floor(Math.random() * 999 + 1) })
+    }
+  }
   categories = categories.sort((a, b) => a.count < b.count ? 1 : -1)
   res.render('categories', { tab: 'categories', categories })
 })

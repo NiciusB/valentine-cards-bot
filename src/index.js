@@ -4,8 +4,9 @@ const mongoose = require('mongoose')
 
 const app = express()
 
-var mongooseConnectWithRetry = function () {
+const mongooseConnectWithRetry = function () {
   mongoose.connect('mongodb://localhost:27017/valentinecards', {
+    useCreateIndex: true,
     useNewUrlParser: true,
     reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
     reconnectInterval: 500 // Reconnect every 500ms
@@ -30,8 +31,8 @@ db.once('open', function () {
 app.set('view engine', 'ejs')
 app.set('views', path.join(__dirname, 'views'))
 
-app.use('/', express.static('public'))
-app.use('/uploads', express.static('uploads'))
+app.use('/', express.static(path.join(__dirname, 'public')))
+app.use('/uploads', express.static(path.join(__dirname, '..', 'uploads')))
 
 app.use(function (req, res, next) {
   req.userIP = req.headers['cf-connecting-ip'] || req.connection.remoteAddress

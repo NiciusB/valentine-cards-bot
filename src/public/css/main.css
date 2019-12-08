@@ -10,6 +10,12 @@ body {
   max-width: 1200px;
   margin: 0 auto;
 }
+label {
+  font-weight: 400;
+}
+input[type=text] {
+  color: #333;
+}
 
 /* Header */
 .header-container {
@@ -92,6 +98,47 @@ header.header li a {
   padding: 10px 0;
   text-shadow: rgba(0,0,0,0.5) 0 0 4px;
 }
+.card-modal {
+  text-align: center;
+}
+.card-modal label {
+  font-size: 0.85em;
+}
+.card-modal label input {
+  margin-bottom: 0.25em;
+  width: 9em;
+}
+.card-modal button {
+  margin-bottom: 0;
+}
+.card-modal .or-separator {
+  font-size: 0.85em;
+  margin: 1em 0;
+  text-align: center;
+  color: #aaa;
+  display: flex;
+  align-items: center;
+}
+.card-modal .or-separator span {
+  padding: 0 0.5em;
+}
+.card-modal .or-separator::before, .card-modal .or-separator::after {
+  display: inline-block;
+  content: '';
+  height: 1px;
+  flex: 1;
+  background-color: #ddd;
+}
+.card-modal .img-container {
+  border-bottom: 1px solid #ddd;
+  margin: 0 auto;
+  margin-bottom: 0.85em;
+  padding-bottom: 0.35em;
+}
+.card-modal .img-container img {
+  max-width: 90%;
+  max-height: 100px;
+}
 
 /* Votation */
 .votation {
@@ -130,12 +177,18 @@ cursor: pointer;
   max-width: 600px;
   line-height: 0;
 }
-#uploadimages input[type=text] {
-  color: #333;
-}
 #uploadimages input[type=submit] {
   max-width: 200px;
   color: #f1f1f1;
+}
+
+/* Categories */
+.cat-link {
+  text-decoration: none;
+  color: #fff;
+}
+.cat-link:hover {
+  color: rgb(153, 219, 255);
 }
 
 /* About */
@@ -150,4 +203,33 @@ cursor: pointer;
 }
 #twitter-widget-0 {
   display: inline-block!important;
+}
+
+/* Modals */
+.modal-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+.modal-background {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  background-color: rgba(0, 0, 0, 0.35);
+}
+.modal-content {
+  position: relative;
+  margin: 0.75em;
+  background: #fafafa;
+  padding: 0.75em;
+  border-radius: 0.5em;
+  color: #333;
 }

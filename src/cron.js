@@ -1,3 +1,4 @@
+const path = require('path')
 const fs = require('fs')
 const Card = require('./models/Card')
 const Queue = require('./models/Queue')
@@ -5,7 +6,7 @@ const Twit = require('twit')
 
 var credentials = []
 try {
-  credentials = JSON.parse(fs.readFileSync('./credentials.json'))
+  credentials = JSON.parse(fs.readFileSync(path.join(__dirname, '..', 'credentials.json')))
 } catch (e) {
   console.error('Please create a credentials.json file with your twitter bot API credentials following the example at credentials.example.json')
   process.exit(1)
@@ -14,10 +15,13 @@ try {
 module.exports = () => {
   setInterval(processQueue, 1000 * 60 * 15)
   setInterval(checkNonPublishedCards, 1000 * 60)
+  setTimeout(checkNonPublishedCards, 1000)
 }
 
 async function checkNonPublishedCards () {
-  const votationMinimum = 7 // number of votes (minus the opposite ones) needed to win the votation
+  // number of votes (minus the opposite ones) needed to win the votation
+  const votationMinimum = process.env.NODE_ENV === 'development' ? 1 : 7
+
   const cards = await Card.find({ published: false })
   cards.forEach(card => {
     const voteScore = card.votes.map(vote => vote.accepted ? 1 : -1).reduce((vote, total) => total + vote, 0)

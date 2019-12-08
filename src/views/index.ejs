@@ -1,7 +1,7 @@
 <% include header.ejs %>
   <div class='grid'>
     <% cards.forEach(function(card){ %>
-        <div class='grid-item'><img src='/uploads/<%= `${card.id}.${card.format}` %>' class='card' onclick='send(<%=card.id%>)'/></div>
+        <div class='grid-item'><img src='/uploads/<%= `${card.id}.${card.format}` %>' class='card' id='card-id-<%=card.id%>' onclick='window.sendCard(<%=card.id%>)'/></div>
     <% }); %>
   </div>
   <% if(cards.length > 0) { %>
@@ -10,55 +10,6 @@
     <div class="page-load-status">
       <p class="infinite-scroll-request">Loading...</p>
     </div>
-    <script>
-    var $grid = $('.grid').masonry({
-      itemSelector: '.grid-item',
-      percentPosition: true
-    });
-    var msnry = $grid.data('masonry');
-    $grid.infiniteScroll({
-      outlayer  : msnry,
-      path: '.pagination__next',
-      status: '.page-load-status',
-      append: '.grid-item',
-      history: false,
-    });
-    $grid.imagesLoaded().progress( function() {
-      $grid.masonry('layout');
-    });
-    var possibleInitialUsernames = [
-      'Shakespeare',
-      'Socrates',
-      'NikolaTesla',
-      'YuriGagarin',
-      'WaltDisney',
-      'Oprah',
-      'Malala',
-      'Marie_Curie',
-      'Hypatia',
-      'AgathaChristie'
-    ];
-    var savedusername = possibleInitialUsernames[Math.floor(Math.random() * possibleInitialUsernames.length)];
-    function validTwitterUsername(sn) {
-      return /^[a-zA-Z0-9_]{1,15}$/.test(sn);
-    }
-    function send(id) {
-      var person = prompt("Username (@) of the reciever", savedusername);
-      if (person[0] === '@') person = person.slice(1)
-      if (person != null) {
-        if (!validTwitterUsername(person)) {
-          alert('That doesn\'t look like a twitter username');
-          return false;
-        }
-    		savedusername = person;
-    		var xmlhttp = new XMLHttpRequest();
-    		xmlhttp.open("GET", "/send?card="+id+"&username="+person, true);
-        xmlhttp.addEventListener("load", function() {
-          var res = JSON.parse(this.responseText);
-          alert(res.message);
-        });
-    		xmlhttp.send();
-    	}
-    }
-    </script>
+    <script async src="https://cdnjs.cloudflare.com/ajax/libs/downloadjs/1.4.8/download.min.js" crossorigin="anonymous"></script>
+    <script async src="/js/main.js?v=1"></script>
 <% include footer.ejs %>

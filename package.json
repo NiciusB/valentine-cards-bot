@@ -4,6 +4,8 @@
   "description": "Twitter bot that sends valentine cards when asked nicely",
   "main": "index.js",
   "scripts": {
+    "update": "git clean -df && git checkout -- . && git pull",
+    "dev": "NODE_ENV=development npx nodemon src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {

@@ -18,9 +18,13 @@ if (typeof error != 'undefined') {
   </ul>
 </div>
 <form id="uploadimages" action="/upload"  method="post" enctype="multipart/form-data" onsubmit="setTimeout(function(){$('#imgforms').attr('disabled','')}, 2)">
-Tags: <input type="text" class="form-control" name="tags" placeholder="Separate by commas (Ex: star wars, darth vader, daddy)" /><br/>
-Image: <input type="file" class="form-control" name="vCard" accept="image/*" /><br/>
-<br/>
-<input type="submit" value="Upload" class="form-control" />
+  <label>
+    Tags: <input type="text" class="form-control" name="tags" placeholder="Separate by commas (Ex: star wars, darth vader, daddy)" /><br/>
+  </label>
+  <label>
+    Image: <input type="file" class="form-control" name="vCard" accept="image/*" /><br/>
+  </label>
+  <br/>
+  <input type="submit" value="Upload" class="form-control" />
 </form>
 <% include footer.ejs %>

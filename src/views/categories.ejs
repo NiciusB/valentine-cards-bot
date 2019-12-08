@@ -1,8 +1,12 @@
 <% include header.ejs %>
 
-<br><div style='text-align:center'>
+<div style="text-align:center">
+  <input type="text" id="searchCatInput" placeholder="Search" />
+</div>
+<div class='grid'>
 <% categories.forEach(function(cat) { %>
-  <p><a href="/?cat=<%=cat.name%>"><%=cat.name%> (<%=cat.count%> cards)</a></p>
+  <div class="grid-item"><a class="cat-link" href="/?cat=<%=cat.name%>"><%=cat.name%> (<%=cat.count%> cards)</a></div>
 <% })  %>
 </div>
+<script async src="/js/categories.js?v=1"></script>
 <% include footer.ejs %>

@@ -1,0 +1,11 @@
+{
+  "apps" : [{
+    "name"      : "valentine-cards-bot",
+    "script"    : "src/index.js",
+    "watch"     : true,
+    "instances" : 1,
+    "env": {
+      "NODE_ENV": "production"
+    }
+  }]
+}
