@@ -16,39 +16,39 @@ module.exports = () => {
   setInterval(checkNonPublishedCards, 1000 * 60)
 }
 
-async function checkNonPublishedCards() {
-  const votation_minimum = 7 // number of votes (minus the opposite ones) needed to win the votation
+async function checkNonPublishedCards () {
+  const votationMinimum = 7 // number of votes (minus the opposite ones) needed to win the votation
   const cards = await Card.find({ published: false })
   cards.forEach(card => {
-    const vote_score = card.votes.map(vote => vote.accepted ? 1 : -1).reduce((vote, total) => total + vote, 0)
-    if (vote_score >= votation_minimum) {
+    const voteScore = card.votes.map(vote => vote.accepted ? 1 : -1).reduce((vote, total) => total + vote, 0)
+    if (voteScore >= votationMinimum) {
       card.published = true
       card.votes = []
       card.save()
-    } else if (vote_score <= -votation_minimum) {
+    } else if (voteScore <= -votationMinimum) {
       card.remove()
       fs.unlink(`uploads/${card.id}.${card.format}`, () => {})
     }
   })
 }
 
-async function processQueue() {
-  const messagesInQueue = await Queue.find().sort({timestamp: 1}).limit(credentials.length).exec()
+async function processQueue () {
+  const messagesInQueue = await Queue.find().sort({ timestamp: 1 }).limit(credentials.length).exec()
   messagesInQueue.forEach((message, index) => {
     var T = new Twit({
-      consumer_key:         credentials[index][0],
-      consumer_secret:      credentials[index][1],
-      access_token:         credentials[index][2],
-      access_token_secret:  credentials[index][3],
-      timeout_ms:           60 * 1000,  // optional HTTP request timeout to apply to all requests.
-      strictSSL:            true     // optional - requires SSL certificates to be valid.
+      consumer_key: credentials[index][0],
+      consumer_secret: credentials[index][1],
+      access_token: credentials[index][2],
+      access_token_secret: credentials[index][3],
+      timeout_ms: 60 * 1000, // optional HTTP request timeout to apply to all requests.
+      strictSSL: true // optional - requires SSL certificates to be valid.
     })
     sendTweet(T, message)
   })
 }
 
-async function sendTweet(T, message) {
-  const card = await Card.findOne({published: true, id: message.card}).exec()
+async function sendTweet (T, message) {
+  const card = await Card.findOne({ published: true, id: message.card }).exec()
 
   var b64content = fs.readFileSync(`uploads/${card.id}.${card.format}`, { encoding: 'base64' })
   // Upload image
