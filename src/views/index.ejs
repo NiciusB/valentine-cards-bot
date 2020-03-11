@@ -1,7 +1,7 @@
 <% include header.ejs %>
   <div class='grid'>
     <% cards.forEach(function(card){ %>
-        <div class='grid-item'><img src='/uploads/<%= `${card.id}.${card.format}` %>' class='card' id='card-id-<%=card.id%>' onclick='window.sendCard(<%=card.id%>)'/></div>
+        <div class='grid-item'><img src='/uploads/<%= `${card.id}.${card.format}` %>' class='card' id='card-id-<%=card.id%>' alt='<%=card.alt%>' title='<%=card.alt%>' onclick='window.sendCard(<%=card.id%>)'/></div>
     <% }); %>
   </div>
   <% if(cards.length > 0) { %>

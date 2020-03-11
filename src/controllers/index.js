@@ -48,7 +48,7 @@ router.get('/about', async function (req, res) {
   res.render('about', { tab: 'about' })
 })
 
-var cpUpload = upload.single('vCard')
+var cpUpload = upload.single('card_image')
 router.all('/upload', cpUpload, async function (req, res) {
   const renderData = { tab: 'upload' }
   if (!req.file) {
@@ -57,7 +57,8 @@ router.all('/upload', cpUpload, async function (req, res) {
   }
 
   renderData.uploaded = false
-  const tags = req.body.tags ? req.body.tags.split(',').map(tag => tag.trim()) : []
+  const tags = req.body.card_tags ? req.body.card_tags.slice(0, 1000).split(',').map(tag => tag.trim()) : []
+  const alt = req.body.card_alt ? req.body.card_alt.slice(0, 300) : ''
   const lastCardID = await Card.findOne().sort({ id: -1 }).exec()
   const newCardID = !lastCardID ? 1 : lastCardID.id + 1
   const format = req.file.mimetype.split('/')[1]
@@ -91,6 +92,7 @@ router.all('/upload', cpUpload, async function (req, res) {
       new Card({
         id: newCardID,
         format,
+        alt,
         hash,
         categories: tags,
         votes: []

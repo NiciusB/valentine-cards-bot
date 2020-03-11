@@ -13,16 +13,24 @@ if (typeof error != 'undefined') {
   <ul>
       <li>No NSFW</li>
       <li>Must have "to:" and "from:" labels or similar</li>
-      <li>Try to put at least one tag</li>
-      <li>You can upload gifs, jpgs or pngs</li>
+      <li>Try to put at least one tag, and include an alt text</li>
   </ul>
 </div>
 <form id="uploadimages" action="/upload"  method="post" enctype="multipart/form-data" onsubmit="setTimeout(function(){$('#imgforms').attr('disabled','')}, 2)">
   <label>
-    Tags: <input type="text" class="form-control" name="tags" placeholder="Separate by commas (Ex: star wars, darth vader, daddy)" /><br/>
+    <div>Tags</div>
+    <div style="font-size: 0.9em;opacity: 0.8;margin: 0.5em 2em">Separate by commas</div>
+    <input type="text" class="form-control" name="card_tags" placeholder="Example: star wars, darth vader, daddy" /><br/>
   </label>
   <label>
-    Image: <input type="file" class="form-control" name="vCard" accept="image/*" /><br/>
+    <div>Alt text</div>
+    <div style="font-size: 0.9em;opacity: 0.8;margin: 0.5em 2em">Description of the image for visually impaired folks</div>
+    <input type="text" class="form-control" name="card_alt" placeholder='Example: Valentine Card featuring a Gravity Falls girl with a chainsaw in her mouth. The text reads "kissing practice?"' /><br/>
+  </label>
+  <label>
+    <div>Image</div>
+    <div style="font-size: 0.9em;opacity: 0.8;margin: 0.5em 2em">Accepted: gifs, jpgs or pngs</div>
+    <input type="file" class="form-control" name="card_image" accept="image/*" /><br/>
   </label>
   <br/>
   <input type="submit" value="Upload" class="form-control" />

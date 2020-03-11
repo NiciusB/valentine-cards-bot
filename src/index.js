@@ -1,31 +1,13 @@
+require('dotenv').config()
 const express = require('express')
 const path = require('path')
-const mongoose = require('mongoose')
+const { onDbReady } = require('./db')
 
 const app = express()
 
-const mongooseConnectWithRetry = function () {
-  mongoose.connect('mongodb://localhost:27017/valentinecards', {
-    useCreateIndex: true,
-    useNewUrlParser: true,
-    reconnectTries: Number.MAX_VALUE, // Never stop trying to reconnect
-    reconnectInterval: 500 // Reconnect every 500ms
-  }, function (err) {
-    if (err) {
-      console.error('Failed to connect to mongo on startup - retrying in 5 sec', err)
-      setTimeout(mongooseConnectWithRetry, 5000)
-    }
-  })
-}
-mongooseConnectWithRetry()
-
-const db = mongoose.connection
-db.on('error', console.error.bind(console, 'connection error:'))
-
-db.once('open', function () {
-  const port = process.env.port || 3000
+onDbReady(() => {
+  const port = process.env.PORT || 3000
   app.listen(port, () => console.log(`Valentine Cards Bot listening on http://localhost:${port}`))
-  require('./cron')()
 })
 
 app.set('view engine', 'ejs')

@@ -4,6 +4,7 @@ var schema = mongoose.Schema({
   id: Number,
   format: String,
   hash: String,
+  alt: String,
   timestamp: { type: Number, default: () => Math.floor(Date.now() / 1000) },
   published: {
     type: Boolean,
