@@ -40,7 +40,7 @@ async function sendNextCardFromCardsQueue () {
     const card = await Card.findOne({ published: true, id: message.card }).exec()
     const tweetStatus = `@${message.username} someone sent you this card!`
     try {
-      await sendTweet(credentials[index], tweetStatus, card)
+      await sendTweet({ credentialsArray: credentials[index], tweetStatus, card, removeIfNoMentions: true })
     } catch (err) {
       console.error(err)
     }
@@ -54,10 +54,10 @@ async function publiclyTweetRandomCard () {
   const cardsCount = await Card.countDocuments({ published: true }).exec()
   const randomEntry = Math.floor(Math.random() * cardsCount)
   const randomCard = await Card.findOne({ published: true }).skip(randomEntry).exec()
-  await sendTweet(credentials[index], '', randomCard)
+  await sendTweet({ credentialsArray: credentials[index], tweetStatus: '', card: randomCard, removeIfNoMentions: false })
 }
 
-async function sendTweet (credentialsArray, tweetStatus, card) {
+async function sendTweet ({ credentialsArray, tweetStatus, card, removeIfNoMentions }) {
   const twClient = new Twitter({
     consumer_key: credentialsArray[0],
     consumer_secret: credentialsArray[1],
@@ -95,9 +95,11 @@ async function sendTweet (credentialsArray, tweetStatus, card) {
     throw new Error('[sendTweet] Something went wrong while tweeting: ' + JSON.stringify({ tweetData, mediaUploadData }))
   }
 
-  // Remove tweet if there were no mentions
-  if (!tweetData.entities || !tweetData.entities.user_mentions.length) {
-    await twClient.post('statuses/destroy/:id', { id: tweetData.id_str })
+  if (removeIfNoMentions) {
+    // Remove tweet if there were no mentions
+    if (!tweetData.entities || !tweetData.entities.user_mentions.length) {
+      await twClient.post(`statuses/destroy/${tweetData.id_str}`)
+    }
   }
 }
 
