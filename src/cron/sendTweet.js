@@ -23,7 +23,7 @@ module.exports.setupSendTweetCron = () => {
     executeFn()
     setInterval(executeFn, frequencyMs)
   }, nextTweetTs - nowTs)
-  executeFn()
+  if (process.env.NODE_ENV === 'development') executeFn()
 }
 
 var credentials = []
